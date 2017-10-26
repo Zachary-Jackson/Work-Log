@@ -42,10 +42,11 @@ class CSVIntermediary():
                                'notes': '{}'.format(notes)
                                })
 
-    def search(self, user_date=None, title=None, minutes=None, notes=None,
+    def search(self, user_date=None, minutes=None, key_phrase=None,
                regex=None, *args, **kwargs):
         """ This takes any of the variables above and searches the CSV
         file using the paramiters given above."""
+        test = input("Testing")
 
     def edit(self, user_date=None, title=None, minutes=None, notes=None):
         """ This edits a particular line in the CSV file. """

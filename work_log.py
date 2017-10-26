@@ -11,10 +11,10 @@ def clear():
 def welcome():
     """ This funciton welcomes the user to the program. """
     clear()
-    menu_selector = input("""   Welcome to the work log application!
-Here you may add or delete tasks for your work log.
-You may also edit them as you wish.
-Enter anything to continue or enter 'q' to quit. """).lower()
+    menu_selector = input("""    Welcome to the work log application!
+  Here you may add or delete tasks for your work log.
+  You may also edit them as you wish.
+  Enter anything to continue or enter 'q' to quit. """).lower()
     if menu_selector != 'q':
         main()
     else:
@@ -30,21 +30,22 @@ def main():
     while main_loop:
         # This clears the screen on every new instance of the loop
         clear()
+        menu_item = EntryChanger()
         # This is the primary menu prompting the user what they want to do.
         menu_selector = input("    Please enter the option you would " +
-                              'like to select.\n' +
-                              'a) Add an entery to the program.\n' +
-                              'b) Search exsisting entries.\n' +
-                              'c) Edit exsisting entries.\n' +
-                              'd) Exit the program.').lower()
+                              'like to select.\n\n' +
+                              '  a) Add an entery to the program.\n' +
+                              '  b) Search exsisting entries.\n' +
+                              '  c) Edit exsisting entries.\n' +
+                              '  d) Exit the program.  ').lower()
         if menu_selector == 'a)' or menu_selector == 'a':
-            menu_item = EntryChanger()
             menu_item.add()
         if menu_selector == 'b)' or menu_selector == 'b':
-            pass
+            menu_item.search()
         if menu_selector == 'c)' or menu_selector == 'c':
             pass
-        if menu_selector == 'd)' or menu_selector == 'd':
+        if menu_selector == 'd)' or menu_selector == 'd' \
+                or menu_selector == 'q':
             print("Thank you for using the work log application!")
             main_loop = False
 
