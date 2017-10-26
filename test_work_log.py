@@ -16,7 +16,16 @@ class CSVIntermediaryTestCase(unittest.TestCase):
         This does not test to see if the correct values are added to the
         CSV file. """
         csv = CSVIntermediary()
-        csv.add()
+        # This is to check by user_date
+        test = csv.add(user_date='04/21/1974', title='Testing with the ' +
+                       'test_add', minutes=8, notes="None to report")
+        #  add later self.assertEqual(test, )
+
+    def test_search_by_date(self):
+        """ This checks to see if test_add put in the correct values,
+        and to see if the test_add method's work log file can be found."""
+        csv = CSVIntermediary()
+        csv.search(user_date='04/21/1974')
 
 
 unittest.main()

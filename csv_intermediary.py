@@ -24,11 +24,11 @@ class CSVIntermediary():
 
     def return_all(self):
         with open(self.file_location) as csvfile:
-            CSV_contents = []
+            csv_contents = []
             reader = csv.DictReader(csvfile)
             for row in reader:
-                CSV_contents.append(row)
-        return CSV_contents
+                csv_contents.append(row)
+        self.csv_contents = csv_contents
 
     def add(self, user_date='12/24/2017', title='Test', minutes=5, notes=None):
         """ This adds the data that is given to it into the CSV file. """
@@ -46,7 +46,32 @@ class CSVIntermediary():
                regex=None, *args, **kwargs):
         """ This takes any of the variables above and searches the CSV
         file using the paramiters given above."""
-        test = input("Testing")
+        self.return_all()
+        csv_contents = self.csv_contents
+        returned_contents = []
+        if user_date:
+            for item in csv_contents:
+                for value in item.values():
+                    if user_date in value:
+                        returned_contents.append(item)
+                        break
+        elif minutes:
+            # searching by the minutes section in the dictionary prevents
+            # minutes from catching dates.
+            for item in csv_contents:
+                if str(minutes) == item['minutes']:
+                    returned_contents.append(item)
+
+        elif key_phrase:
+            for item in csv_contents:
+                for value in item.values():
+                    if key_phrase in value:
+                        returned_contents.append(item)
+                        break
+        elif regex:
+            pass
+        self.found = returned_contents
+        return self.found
 
     def edit(self, user_date=None, title=None, minutes=None, notes=None):
         """ This edits a particular line in the CSV file. """
