@@ -1,5 +1,7 @@
 import os
 
+from entry_changer import EntryChanger
+
 
 def clear():
     """ This function clears the screen for easier reading and use."""
@@ -33,12 +35,16 @@ def main():
                               'like to select.\n' +
                               'a) Add an entery to the program.\n' +
                               'b) Search exsisting entries.\n' +
-                              'c) Exit the program.').lower()
+                              'c) Edit exsisting entries.\n' +
+                              'd) Exit the program.').lower()
         if menu_selector == 'a)' or menu_selector == 'a':
-            pass
+            menu_item = EntryChanger()
+            menu_item.add()
         if menu_selector == 'b)' or menu_selector == 'b':
             pass
         if menu_selector == 'c)' or menu_selector == 'c':
+            pass
+        if menu_selector == 'd)' or menu_selector == 'd':
             print("Thank you for using the work log application!")
             main_loop = False
 

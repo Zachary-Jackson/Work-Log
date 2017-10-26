@@ -30,23 +30,23 @@ class CSVIntermediary():
                 CSV_contents.append(row)
         return CSV_contents
 
-    def add(self, date='12/24/2017', title='Test', minutes=5, notes=None):
+    def add(self, user_date='12/24/2017', title='Test', minutes=5, notes=None):
         """ This adds the data that is given to it into the CSV file. """
         with open(self.file_location, 'a') as csvfile:
             fieldnames = ['date', 'title', 'minutes', 'notes']
             logwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
             logwriter.writerow({
-                               'date': '{}'.format(date),
+                               'date': '{}'.format(user_date),
                                'title': '{}'.format(title),
                                'minutes': '{}'.format(minutes),
                                'notes': '{}'.format(notes)
                                })
 
-    def search(self, date=None, title=None, minutes=None, notes=None,
+    def search(self, user_date=None, title=None, minutes=None, notes=None,
                regex=None, *args, **kwargs):
         """ This takes any of the variables above and searches the CSV
         file using the paramiters given above."""
 
-    def edit(self, date=None, title=None, minutes=None, notes=None):
+    def edit(self, user_date=None, title=None, minutes=None, notes=None):
         """ This edits a particular line in the CSV file. """
         pass
