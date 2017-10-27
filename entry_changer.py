@@ -1,5 +1,6 @@
 import datetime
 import os
+import time
 
 from csv_intermediary import CSVIntermediary
 
@@ -26,7 +27,7 @@ class EntryChanger():
                       "  Please enter a valid one.\n")
             user_date = input("    Please enter the date in " +
                               "  MM/DD/YYYY format.\n" +
-                              "  Enter 'q' to 'quit'.  ")
+                              "  Enter 'q' to return to the main menu.  ")
             try:
                 datetime.datetime.strptime(user_date, '%m/%d/%Y')
             except ValueError:
@@ -73,22 +74,24 @@ class EntryChanger():
         while continue_loop:
             self.clear()
             menu_options = ['a', 'a)', 'b', 'b)', 'c', 'c)', 'd',
-                            'd)', 'q', 'quit']
+                            'd)', 'q', 'quit', 'date', 'time',
+                            'exact', 'regular', 'regular expression']
             menu_selector = input("    Enter how you would like to search " +
-                                  "the work log database.\n" +
+                                  "the work log database.\n\n" +
                                   '  a) Search by date.\n' +
                                   '  b) Search by time spent\n' +
                                   '  c) Search by an exact search\n' +
                                   '  d) Search by a python ' +
                                   'regular expression\n' +
-                                  "    Enter 'q' to quit  "
+                                  "    Enter 'q' to return to the main menu.  "
                                   ).lower()
             if menu_selector in menu_options:
                 break
 
         csv = CSVIntermediary()
         # Finds by date
-        if menu_selector == 'a' or menu_selector == 'a)':
+        if menu_selector == 'a' or menu_selector == 'a)' \
+           or menu_selector == 'date':
             valid_variable = True
             while True:
                 self.clear()
@@ -107,14 +110,15 @@ class EntryChanger():
             self.found_results = csv.search(user_date=user_date)
 
         # Find by time spent
-        if menu_selector == 'b' or menu_selector == 'b)':
+        if menu_selector == 'b' or menu_selector == 'b)' \
+           or menu_selector == 'time':
             valid_variable = True
             self.clear()
             while True:
                 if valid_variable is False:
                     self.clear()
                     print("  That is not a valid number for minutes.\n" +
-                          "  Please enter a number like '15'.\n")
+                          "  Please enter a number like '15'.  \n")
                 try:
                     minutes = int(input("  Please enter the minutes " +
                                         "spent on the task.  "))
@@ -125,24 +129,52 @@ class EntryChanger():
             self.found_results = csv.search(minutes=minutes)
 
         # Find by an exact search
-        if menu_selector == 'c' or menu_selector == 'c)':
+        if menu_selector == 'c' or menu_selector == 'c)' \
+           or menu_selector == 'exact':
             self.clear()
             key_phrase = input("  Enter the 'exact' phrase you want to " +
                                'search for.\n' +
-                               '  This searches titles and notes.')
+                               '  This searches titles and notes.  ')
             self.found_results = csv.search(key_phrase=key_phrase)
 
         # Find by a regular expression pattern.
-        if menu_selector == 'd' or menu_selector == 'd':
+        if menu_selector == 'd' or menu_selector == 'd' \
+           or menu_selector == 'regular' \
+           or menu_selector == 'regular expression':
             regex = input('Enter the python regular expression ' +
-                          'string you want to search with.')
+                          'string you want to search with.  ')
             self.found_results = csv.search(regex=regex)
 
         # This goes to the show method to show the user there results.
-        self.show()
+        if menu_selector != 'q' and menu_selector != 'quit':
+            self.show()
 
     def edit(self):
         pass
+
+    def show_template(self, entry_num, max_entries, entry_date,
+                      title, minutes, notes, menu_options=None):
+        """ This is template that is created for and used in show(). """
+        self.clear()
+        template = """
+      Entry number_{} of {}
+  Date: {}
+  Title: {}
+  Minutes: {}
+
+  Notes: {}
+  ----------------------------------------------------------------------------
+  """.format(entry_num + 1, max_entries, entry_date, title, minutes, notes)
+        print(template)
+        print("  Enter 'q' to exit to the main menu\n" +
+              "  Enter 'search' to do another search.")
+        if menu_options == 'left':
+            print("  You can move left. Enter 'l' or 'left'")
+        elif menu_options == 'right':
+            print("  You can move right. Enter 'r' or 'right'")
+        elif menu_options == 'both':
+            print("  You can move left or right.\n" +
+                  "  Enter 'r', 'right', 'l', or 'left'")
 
     def show(self):
         """ Using the information in self.found_results this shows the
@@ -151,15 +183,54 @@ class EntryChanger():
         show menu."""
         found_results = self.found_results
         length = len(found_results)
+        # This prevents the loop from running if not results are returned.
+        if length == 0:
+            run_loop = False
+            timer_counter = range(5, 0, -1)
+            for second in timer_counter:
+                self.clear()
+                print("""
+    There were no results found for your search.
+  Taking you back to the search menu. In {} seconds.""".format(second))
+                time.sleep(1)
+            run_loop = False
+            self.search()
+
+        else:
+            run_loop = True
 
         # This gathers all the information from a ceratain work log in
         # found results and gathers the information to show to the
         # user in an organized fashion.
         index_counter = 0
-        while True:
-            print(found_results[index_counter])
-            menu_selector = input("Which way to you want to go?  ").lower()
+        while run_loop:
+            entry_date = found_results[index_counter]['date']
+            title = found_results[index_counter]['title']
+            minutes = found_results[index_counter]['minutes']
+            notes = found_results[index_counter]['notes']
+
+            # This creates the menu_options variable for the show_template
+            # left means the user can move left.
+            # Right, both and none mean the same as there name.
+            menu_options = None
+            if index_counter == 0:
+                if index_counter < length - 1:
+                    menu_options = 'right'
+            if index_counter == length - 1:
+                if index_counter != 0:
+                    menu_options = 'left'
+            if index_counter > 0 and index_counter < length - 1:
+                menu_options = 'both'
+
+            self.show_template(index_counter, length, entry_date, title,
+                               minutes, notes, menu_options)
+            menu_selector = input("  ").lower()
             if menu_selector == 'r' or menu_selector == 'd':
                 index_counter += 1
             elif menu_selector == 'l' or menu_selector == 'a':
                 index_counter -= 1
+            elif menu_selector == 'q' or menu_selector == 'quit':
+                break
+            elif menu_selector == 's' or menu_selector == 'search':
+                run_loop = False
+                self.search()

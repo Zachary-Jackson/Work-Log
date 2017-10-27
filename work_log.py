@@ -18,7 +18,7 @@ def welcome():
     if menu_selector != 'q':
         main()
     else:
-        print("Until next time, bon voyage!")
+        print("\nUntil next time, bon voyage!")
 
 
 def main():
@@ -32,17 +32,23 @@ def main():
         clear()
         menu_item = EntryChanger()
         # This is the primary menu prompting the user what they want to do.
-        menu_selector = input("    Please enter the option you would " +
+        menu_selector = input('                                 Main Menu\n' +
+                              '-----------------------------------------' +
+                              '---------------------------------------\n'
+                              "    Please enter the option you would " +
                               'like to select.\n\n' +
                               '  a) Add an entery to the program.\n' +
                               '  b) Search exsisting entries.\n' +
                               '  c) Edit exsisting entries.\n' +
                               '  d) Exit the program.  ').lower()
-        if menu_selector == 'a)' or menu_selector == 'a':
+        if menu_selector == 'a)' or menu_selector == 'a' \
+                or menu_selector == 'add':
             menu_item.add()
-        if menu_selector == 'b)' or menu_selector == 'b':
+        if menu_selector == 'b)' or menu_selector == 'b' \
+                or menu_selector == 'search':
             menu_item.search()
-        if menu_selector == 'c)' or menu_selector == 'c':
+        if menu_selector == 'c)' or menu_selector == 'c' \
+                or menu_selector == 'edit':
             pass
         if menu_selector == 'd)' or menu_selector == 'd' \
                 or menu_selector == 'q':
