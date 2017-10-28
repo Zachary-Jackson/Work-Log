@@ -23,9 +23,9 @@ class EntryChanger():
         while True:
             self.clear()
             if valid_variable is False:
-                print("    That is not a valid date." +
+                print("\n    That is not a valid date." +
                       "  Please enter a valid one.\n")
-            user_date = input("    Please enter the date in " +
+            user_date = input("\n    Please enter the date in " +
                               "  MM/DD/YYYY format.\n" +
                               "  Enter 'q' to return to the main menu.  ")
             try:
@@ -50,7 +50,7 @@ class EntryChanger():
             while True:
                 if valid_variable is False:
                     self.clear()
-                    print("  That is not a valid number for minutes.\n" +
+                    print("\n  That is not a valid number for minutes.\n" +
                           "  Please enter a number like '15'.")
                 try:
                     minutes = int(input("\n  Please enter the minutes spent " +
@@ -68,21 +68,32 @@ class EntryChanger():
             csv = CSVIntermediary()
             csv.add(user_date, title, minutes, notes)
 
+    def show_all(self):
+        """ This gets all of the work log entries from CSVIntermediary and
+        sends it to self.show()."""
+        csv = CSVIntermediary()
+        self.found_results = csv.return_all()
+        self.show()
+
     def search(self):
+        """ This gathers the users input and determins how to process the
+        data using CSVIntermediary and sends it to self.show()."""
         # Shows the user a menu of items to choice from.
         continue_loop = True
         while continue_loop:
             self.clear()
             menu_options = ['a', 'a)', 'b', 'b)', 'c', 'c)', 'd',
-                            'd)', 'q', 'quit', 'date', 'time',
+                            'd)', 'e', 'e)', 'all', 'q', 'quit',
+                            'date', 'time',
                             'exact', 'regular', 'regular expression']
-            menu_selector = input("    Enter how you would like to search " +
+            menu_selector = input("\n    Enter how you would like to search " +
                                   "the work log database.\n\n" +
                                   '  a) Search by date.\n' +
                                   '  b) Search by time spent\n' +
                                   '  c) Search by an exact search\n' +
                                   '  d) Search by a python ' +
                                   'regular expression\n' +
+                                  '  e) Shows all work logs.\n' +
                                   "    Enter 'q' to return to the main menu.  "
                                   ).lower()
             if menu_selector in menu_options:
@@ -141,12 +152,19 @@ class EntryChanger():
         if menu_selector == 'd' or menu_selector == 'd' \
            or menu_selector == 'regular' \
            or menu_selector == 'regular expression':
-            regex = input('Enter the python regular expression ' +
+            regex = input('\nEnter the python regular expression ' +
                           'string you want to search with.  ')
             self.found_results = csv.search(regex=regex)
 
+        # This returns all work log items and sends them to show.
+        if menu_selector == 'e' or menu_selector == 'e)' \
+                or menu_selector == 'all':
+            self.show_all()
+
         # This goes to the show method to show the user there results.
-        if menu_selector != 'q' and menu_selector != 'quit':
+        if menu_selector != 'q' and menu_selector != 'quit' \
+                and menu_selector != 'e' and menu_selector != 'e)' \
+                and menu_selector != 'all':
             self.show()
 
     def edit(self):
@@ -186,7 +204,7 @@ class EntryChanger():
         # This prevents the loop from running if not results are returned.
         if length == 0:
             run_loop = False
-            timer_counter = range(5, 0, -1)
+            timer_counter = range(4, 0, -1)
             for second in timer_counter:
                 self.clear()
                 print("""
@@ -225,10 +243,31 @@ class EntryChanger():
             self.show_template(index_counter, length, entry_date, title,
                                minutes, notes, menu_options)
             menu_selector = input("  ").lower()
+
+            # This controls if the user can actually go left and right.
+            # If not, then the user is told and can choice what to do next.
             if menu_selector == 'r' or menu_selector == 'd':
-                index_counter += 1
+                if index_counter >= length - 1:
+                    timer_counter = range(3, 0, -1)
+                    for seconds in timer_counter:
+                        self.clear()
+                        print("\n    You can not go right.\n" +
+                              "  Returning to your search in {} seconds."
+                              .format(seconds))
+                        time.sleep(1)
+                else:
+                    index_counter += 1
             elif menu_selector == 'l' or menu_selector == 'a':
-                index_counter -= 1
+                if index_counter <= 0:
+                    timer_counter = range(3, 0, -1)
+                    for seconds in timer_counter:
+                        self.clear()
+                        print("\n    You can not go left.\n" +
+                              "  Returning to your search in {} seconds."
+                              .format(seconds))
+                        time.sleep(1)
+                else:
+                    index_counter -= 1
             elif menu_selector == 'q' or menu_selector == 'quit':
                 break
             elif menu_selector == 's' or menu_selector == 'search':

@@ -11,9 +11,10 @@ def clear():
 def welcome():
     """ This funciton welcomes the user to the program. """
     clear()
-    menu_selector = input("""    Welcome to the work log application!
+    menu_selector = input("""
+    Welcome to the work log application!
+
   Here you may add or delete tasks for your work log.
-  You may also edit them as you wish.
   Enter anything to continue or enter 'q' to quit. """).lower()
     if menu_selector != 'q':
         main()
@@ -39,7 +40,7 @@ def main():
                               'like to select.\n\n' +
                               '  a) Add an entery to the program.\n' +
                               '  b) Search exsisting entries.\n' +
-                              '  c) Edit exsisting entries.\n' +
+                              '  c) Show all work log entries.\n' +
                               '  d) Exit the program.  ').lower()
         if menu_selector == 'a)' or menu_selector == 'a' \
                 or menu_selector == 'add':
@@ -47,11 +48,12 @@ def main():
         if menu_selector == 'b)' or menu_selector == 'b' \
                 or menu_selector == 'search':
             menu_item.search()
-        if menu_selector == 'c)' or menu_selector == 'c' \
-                or menu_selector == 'edit':
-            pass
-        if menu_selector == 'd)' or menu_selector == 'd' \
-                or menu_selector == 'q':
+        if menu_selector == 'c' or menu_selector == 'c)' \
+                or menu_selector == 'all':
+            menu_item.show_all()
+
+        if menu_selector == 'd' or menu_selector == 'd)' \
+                or menu_selector == 'q' or menu_selector == 'quit':
             print("Thank you for using the work log application!")
             main_loop = False
 

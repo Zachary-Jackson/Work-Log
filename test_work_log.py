@@ -16,10 +16,10 @@ class CSVIntermediaryTestCase(unittest.TestCase):
         """ Does add work? This checks to see if add crashes.
         This does not test to see if the correct values are added to the
         CSV file. """
-        csv = CSVIntermediary()
+        # csv = CSVIntermediary()
         # This is to check by user_date
-        csv.add(user_date='04/21/1974', title='Testing with the ' +
-                'test_add', minutes=8, notes="None to report")
+        # csv.add(user_date='04/21/1974', title='Testing with the ' +
+        #         'test_add', minutes=8, notes="None to report")
 
     def test_search_by_date(self):
         """ This checks mostly to see if the searching crashes the program"""
@@ -39,7 +39,9 @@ class CSVIntermediaryTestCase(unittest.TestCase):
     def test_search_by_regex(self):
         """ This checks mostly to see if the searching crashes the program"""
         csv = CSVIntermediary()
-        csv.search(regex='\d')
+        # This searches via phone numbers.
+        found = csv.search(regex='\(?\d{3}\)?-?\s?\d{3}-\d{4}')
+        print(found)
 
 
 class EntryChangerTest(unittest.TestCase):
@@ -57,7 +59,7 @@ class EntryChangerTest(unittest.TestCase):
                        'date': '01/04/1995',
                        'minutes': '49', 'title': 'Salt mines'}]
         show_test.found_results = show_items
-        show_test.show()
+        # show_test.show()
 
 
 unittest.main()

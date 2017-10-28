@@ -1,12 +1,16 @@
-date,title,minutes,notes
-01/04/1995,Space Launch,10,This day in history a space ship may have launched.
-01/04/1995,Salt mines,49,Some salt was undoubtedly mined this day.
-10/25/2017,Testing CSV File,8,I am testing/editing this CSV file.
-10/04/1957,Spuntnik 1,15,This day the soviets launched the Sputnik 1.
-08/05/2016,Rio Games,7,This is the day the Rio Olympic games started.
-12/24/2017,Test,5,None
-10/25/2017,Programming work,15,Various testing.
+date,title,minutes,notes
+01/04/1995,Space Launch,10,This day in history a space ship may have launched
+08/14/1973,"Comma, test.",78,555 386-4829
+09/23/1841,Easter bunny,32,Testing regex via phone numbers 555 555-2348
+12/25/1874,Santa's phone number,37,(555) 555-2397
+08/05/2016,Rio Games,7,This day the Rio Olympic games started.
+01/04/1995,Salt mines,48,Some salt was undoutedly mined this day.
+07/12/1987,Full Moon,12,There probably was not a full moon on this day
+09/06/1620,Mayflower landing,32,The mayflower arrived at Cape Cod
+03/18/2130,Aliens!,13,We have not yet found any
+10/04/1957,Spuntnik,15,This day the soviets launched the Sputnik 1.
 01/14/0957,A long time ago.,21,
-03/10/5482,Future,28,This is a long ways off.
-09/06/1620,Mayflower landing,32,The Mayflower arrived at Cape Cod
-07/12/1987,Full Moon,12,There probably was not a full moon on this day.
+12/05/7567,Phone test,54,555 564-3850
+03/10/5684,Future,28,This is a long ways off
+03/18/2016,Email,4,example@mail.com
+01/14/1827,Email,13,Was there email back then? like testemail@something.com
