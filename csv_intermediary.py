@@ -32,7 +32,7 @@ class CSVIntermediary():
         self.csv_contents = csv_contents
         return self.csv_contents
 
-    def add(self, user_date, title, minutes, notes, location=None):
+    def add(self, user_date, title, minutes, notes=None, location=None):
         """ This adds the data that is given to it into the CSV file. """
         # This checks to see if a location has been given to add.
         if location is None:
@@ -47,9 +47,12 @@ class CSVIntermediary():
                                'notes': '{}'.format(notes)
                                })
 
-    def delete(self, entry_date, title, minutes, notes):
-        """ This gets the date, title, minutes, and notes for a dictionary
-        in order to search for it from self.return_all"""
+    def editor(self, entry_date, title, minutes, notes=None,
+               new_entry_date=None, new_title=None,
+               new_minutes=None, new_notes=None, edit=False):
+        """ This deletes the information passed into the editor, unless edit
+        is true in which case the new_ variables are used to make a new
+        work log."""
         dict_list = self.return_all()
 
         # This automatically deletes worklog_csv.csv and rewrites it.
@@ -67,8 +70,14 @@ class CSVIntermediary():
             # This checks to see if the entry given to delete()
             # is the same as the item in dict_list.
             if entry_date == i_date and title == i_title \
-                    and str(minutes) == i_minutes and notes == i_notes:
-                pass
+                    and str(minutes) == i_minutes and (notes == i_notes
+                                                       or notes is None):
+                # This creates another entry if edit is true
+                if edit:
+                    self.add(new_entry_date, new_title, new_minutes,
+                             new_notes, location=self.file_location)
+                else:
+                    pass
             else:
                 self.add(i_date, i_title, i_minutes, i_notes,
                          location=self.file_location)
@@ -129,7 +138,3 @@ class CSVIntermediary():
                 returned_contents.append(csv_contents[number-1])
         self.found = returned_contents
         return self.found
-
-    def edit(self, user_date=None, title=None, minutes=None, notes=None):
-        """ This edits a particular line in the CSV file. """
-        pass

@@ -21,6 +21,8 @@ class CSVIntermediaryTestCase(unittest.TestCase):
 
         csv.add(user_date='04/21/1974', title='Testing with the ' +
                 'test_add', minutes=8, notes="None to report")
+        csv.add(user_date='03/14/1764', title='secondary testing ' +
+                'test', minutes=12)
 
     def test_search_by_date(self):
         """ This checks mostly to see if the searching crashes the program"""
@@ -43,11 +45,22 @@ class CSVIntermediaryTestCase(unittest.TestCase):
         # This searches via phone numbers.
         csv.search(regex='\(?\d{3}\)?-?\s?\d{3}-\d{4}')
 
-    def test_delete(self):
-        """ This tests to see if delete is working. """
+    def test_editor_delete(self):
+        """ This tests to see if delete in editor is working. """
         csv = CSVIntermediary()
-        csv.delete(entry_date='04/21/1974', title='Testing with the ' +
+        csv.editor(entry_date='04/21/1974', title='Testing with the ' +
                    'test_add', minutes=8, notes="None to report")
+
+    def test_editor_edit(self):
+        """ This tests to see if the editing portion of the editor is
+        working."""
+        csv = CSVIntermediary()
+        csv.editor(entry_date='03/14/1764', title='secondary testing ' +
+                   'test', minutes=12, new_entry_date='02/14/1764',
+                   new_title='2nd testing', new_minutes=2,
+                   new_notes='I want notes now.', edit=True)
+        csv.editor(entry_date='02/14/1764', title='2nd testing',
+                   minutes=2, notes='I want notes now.')
 
 
 class EntryChangerTest(unittest.TestCase):

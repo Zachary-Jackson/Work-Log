@@ -14,7 +14,7 @@ class EntryChanger():
         """ This clears the screen for easier viewing. """
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def add(self):
+    def add(self, edit=False):
         """ This gathers information from the user and sends it to
         CSVIntermediary() to be stored into the csv file."""
         valid_variable = True
@@ -66,7 +66,10 @@ class EntryChanger():
             # This sends all of the information to CSVIntermediary for
             # further processing
             csv = CSVIntermediary()
-            csv.add(user_date, title, minutes, notes)
+            if edit is False:
+                csv.add(user_date, title, minutes, notes)
+            else:
+                return user_date, title, minutes, notes
 
     def show_all(self):
         """ This gets all of the work log entries from CSVIntermediary and
@@ -186,6 +189,7 @@ class EntryChanger():
         print(template)
         print("  Enter 'q' to exit to the main menu\n" +
               "  Enter 'search' to do another search.\n" +
+              "  Enter 'e' to edit this work log.\n" +
               "  Enter 'd' to delete this work log.")
         if menu_options == 'left':
             print("  You can move left. Enter 'l' or 'left'")
@@ -282,15 +286,28 @@ class EntryChanger():
                 run_loop = False
                 self.search()
             elif menu_selector == 'e' or menu_selector == 'edit':
-                pass
-                # add later..
+                new_user_date, new_title, new_minutes, new_notes = \
+                 self.add(edit=True)
+                csv = CSVIntermediary()
+                csv.editor(entry_date, title, minutes, notes,
+                           new_user_date, new_title, new_minutes,
+                           new_notes, edit=True)
+                # this is a new dictionary to replace one in self.found_results
+                new_dict = {'date': '{}'.format(new_user_date),
+                            'title': '{}'.format(new_title),
+                            'minutes': '{}'.format(new_minutes),
+                            'notes': '{}'.format(new_notes)}
+
+                self.found_results[index_counter] = new_dict
+                self.show(index_counter=index_counter)
+                break
 
             elif menu_selector == 'd' or menu_selector == 'delete':
                 delete = input('\n  Are you sure you want to delete this ' +
                                "entry? N/y'").lower()
                 if delete == 'y':
                     csv = CSVIntermediary()
-                    csv.delete(entry_date, title, minutes, notes)
+                    csv.editor(entry_date, title, minutes, notes)
                     del self.found_results[index_counter]
                     index_counter -= 1
                     self.show(index_counter=index_counter)
