@@ -185,7 +185,8 @@ class EntryChanger():
   """.format(entry_num + 1, max_entries, entry_date, title, minutes, notes)
         print(template)
         print("  Enter 'q' to exit to the main menu\n" +
-              "  Enter 'search' to do another search.")
+              "  Enter 'search' to do another search.\n" +
+              "  Enter 'd' to delete this work log.")
         if menu_options == 'left':
             print("  You can move left. Enter 'l' or 'left'")
         elif menu_options == 'right':
@@ -194,15 +195,25 @@ class EntryChanger():
             print("  You can move left or right.\n" +
                   "  Enter 'r', 'right', 'l', or 'left'")
 
-    def show(self):
+    def show(self, index_counter=0):
         """ Using the information in self.found_results this shows the
         user the results of a previous search. It also allows the user
         to to continue searching, edit, delete, or exit out of the
         show menu."""
         found_results = self.found_results
         length = len(found_results)
+        run_loop = True
+
+        # This is incase the user deletes the only entry in the search
+        # results.
+        if index_counter == -1:
+            if length > 0:
+                index_counter = 0
+            else:
+                run_loop = False
+
         # This prevents the loop from running if not results are returned.
-        if length == 0:
+        elif length == 0:
             run_loop = False
             timer_counter = range(4, 0, -1)
             for second in timer_counter:
@@ -214,14 +225,11 @@ class EntryChanger():
             run_loop = False
             self.search()
 
-        else:
-            run_loop = True
-
         # This gathers all the information from a ceratain work log in
         # found results and gathers the information to show to the
         # user in an organized fashion.
-        index_counter = 0
         while run_loop:
+
             entry_date = found_results[index_counter]['date']
             title = found_results[index_counter]['title']
             minutes = found_results[index_counter]['minutes']
@@ -246,7 +254,7 @@ class EntryChanger():
 
             # This controls if the user can actually go left and right.
             # If not, then the user is told and can choice what to do next.
-            if menu_selector == 'r' or menu_selector == 'd':
+            if menu_selector == 'r' or menu_selector == 'right':
                 if index_counter >= length - 1:
                     timer_counter = range(3, 0, -1)
                     for seconds in timer_counter:
@@ -257,7 +265,7 @@ class EntryChanger():
                         time.sleep(1)
                 else:
                     index_counter += 1
-            elif menu_selector == 'l' or menu_selector == 'a':
+            elif menu_selector == 'l' or menu_selector == 'left':
                 if index_counter <= 0:
                     timer_counter = range(3, 0, -1)
                     for seconds in timer_counter:
@@ -273,3 +281,17 @@ class EntryChanger():
             elif menu_selector == 's' or menu_selector == 'search':
                 run_loop = False
                 self.search()
+            elif menu_selector == 'e' or menu_selector == 'edit':
+                pass
+                # add later..
+
+            elif menu_selector == 'd' or menu_selector == 'delete':
+                delete = input('\n  Are you sure you want to delete this ' +
+                               "entry? N/y'").lower()
+                if delete == 'y':
+                    csv = CSVIntermediary()
+                    csv.delete(entry_date, title, minutes, notes)
+                    del self.found_results[index_counter]
+                    index_counter -= 1
+                    self.show(index_counter=index_counter)
+                    break

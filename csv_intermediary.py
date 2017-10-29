@@ -32,9 +32,12 @@ class CSVIntermediary():
         self.csv_contents = csv_contents
         return self.csv_contents
 
-    def add(self, user_date='12/24/2017', title='Test', minutes=5, notes=None):
+    def add(self, user_date, title, minutes, notes, location=None):
         """ This adds the data that is given to it into the CSV file. """
-        with open(self.file_location, 'a') as csvfile:
+        # This checks to see if a location has been given to add.
+        if location is None:
+            location = self.file_location
+        with open(location, 'a') as csvfile:
             fieldnames = ['date', 'title', 'minutes', 'notes']
             logwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
             logwriter.writerow({
@@ -43,6 +46,32 @@ class CSVIntermediary():
                                'minutes': '{}'.format(minutes),
                                'notes': '{}'.format(notes)
                                })
+
+    def delete(self, entry_date, title, minutes, notes):
+        """ This gets the date, title, minutes, and notes for a dictionary
+        in order to search for it from self.return_all"""
+        dict_list = self.return_all()
+
+        # This automatically deletes worklog_csv.csv and rewrites it.
+        with open(self.file_location, 'w') as csvfile:
+            fieldnames = ['date', 'title', 'minutes', 'notes']
+            logwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            logwriter.writeheader()
+
+        for item in dict_list:
+            i_date = item['date']
+            i_title = item['title']
+            i_minutes = item['minutes']
+            i_notes = item['notes']
+
+            # This checks to see if the entry given to delete()
+            # is the same as the item in dict_list.
+            if entry_date == i_date and title == i_title \
+                    and str(minutes) == i_minutes and notes == i_notes:
+                pass
+            else:
+                self.add(i_date, i_title, i_minutes, i_notes,
+                         location=self.file_location)
 
     def search(self, user_date=None, minutes=None, key_phrase=None,
                regex=None, *args, **kwargs):
@@ -98,7 +127,6 @@ class CSVIntermediary():
                 # has the top line of 'date,title,minutes,notes'
                 # where as the csv_contents does not.
                 returned_contents.append(csv_contents[number-1])
-
         self.found = returned_contents
         return self.found
 
