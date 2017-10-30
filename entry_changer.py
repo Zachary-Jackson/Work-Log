@@ -97,7 +97,8 @@ class EntryChanger():
                                   '  d) Search by a python ' +
                                   'regular expression\n' +
                                   '  e) Shows all work logs.\n' +
-                                  "    Enter 'q' to return to the main menu.  "
+                                  "\n     Enter 'q' to return to the" +
+                                  " main menu.  "
                                   ).lower()
             if menu_selector in menu_options:
                 break
@@ -106,22 +107,57 @@ class EntryChanger():
         # Finds by date
         if menu_selector == 'a' or menu_selector == 'a)' \
            or menu_selector == 'date':
-            valid_variable = True
+            # This controls if the user is searching via a range of dates
+            # or one date.
+            def inline_date_getter(date_number=None):
+                """ This takes date_number which is an optional variable
+                that tells the function which date number we are getting. """
+                # this controls which string is shown to the user.
+                if date_number == 1:
+                    string = ('\n  Please enter the first date in' +
+                              'MM/DD/YYYY format.  ')
+                elif date_number == 2:
+                    string = ('  Please enter the second date in MM/DD/YYYY ' +
+                              ' format.  ')
+                else:
+                    string = '  Please enter the date in MM/DD/YYYY format.  '
+                valid_variable = True
+                while True:
+                    self.clear()
+                    if valid_variable is False:
+                        print('  That is not a valid date. Please enter a' +
+                              ' valid one.\n')
+                    user_date = input(string)
+                    try:
+                        datetime.datetime.strptime(user_date, '%m/%d/%Y')
+                    except ValueError:
+                        valid_variable = False
+                        continue
+                    else:
+                        return user_date
+
+            # This is no longer part of the inline_date_getter
             while True:
                 self.clear()
-                if valid_variable is False:
-                    print('  That is not a valid date. Please enter a' +
-                          'valid one.\n')
-                user_date = input('  Please enter the date in ' +
-                                  'MM/DD/YYYY format.  ')
-                try:
-                    datetime.datetime.strptime(user_date, '%m/%d/%Y')
-                except ValueError:
-                    valid_variable = False
-                    continue
-                else:
+                dates = input("\n    Are you searching via a range of dates " +
+                              " or by a single date?\n" +
+                              "  Enter 'r' for a range of dates or 's' for " +
+                              "single.  ")
+                if dates == 'r' or dates == 'range':
+                    dates = True
                     break
-            self.found_results = csv.search(user_date=user_date)
+                elif dates == 's' or dates == 'single':
+                    dates = False
+                    break
+
+            if dates:
+                user_date = inline_date_getter(date_number=1)
+                user_date_2 = inline_date_getter(date_number=2)
+                self.found_results = csv.search(user_date=user_date,
+                                                second_date=user_date_2)
+            else:
+                user_date = inline_date_getter()
+                self.found_results = csv.search(user_date=user_date)
 
         # Find by time spent
         if menu_selector == 'b' or menu_selector == 'b)' \
@@ -155,7 +191,7 @@ class EntryChanger():
         if menu_selector == 'd' or menu_selector == 'd' \
            or menu_selector == 'regular' \
            or menu_selector == 'regular expression':
-            regex = input('\nEnter the python regular expression ' +
+            regex = input('\n  Enter the python regular expression ' +
                           'string you want to search with.  ')
             self.found_results = csv.search(regex=regex)
 

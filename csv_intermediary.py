@@ -1,4 +1,5 @@
 import csv
+import datetime
 import os
 import re
 
@@ -82,19 +83,43 @@ class CSVIntermediary():
                 self.add(i_date, i_title, i_minutes, i_notes,
                          location=self.file_location)
 
-    def search(self, user_date=None, minutes=None, key_phrase=None,
-               regex=None, *args, **kwargs):
+    def search(self, user_date=None, second_date=None, minutes=None,
+               key_phrase=None, regex=None, *args, **kwargs):
         """ This takes any of the variables above and searches the CSV
         file using the paramiters given above."""
         self.return_all()
         csv_contents = self.csv_contents
         returned_contents = []
         if user_date:
-            for item in csv_contents:
-                for value in item.values():
-                    if user_date in value:
-                        returned_contents.append(item)
-                        break
+            if second_date is None:
+                for item in csv_contents:
+                    for value in item.values():
+                        if user_date in value:
+                            returned_contents.append(item)
+                            break
+            else:
+                date_1 = datetime.datetime.strptime(user_date, '%m/%d/%Y')
+                date_2 = datetime.datetime.strptime(second_date, '%m/%d/%Y')
+                # This determinds the order of date_1 and date_2
+                if date_1 <= date_2:
+                    date_1_first = True
+                else:
+                    date_1_first = False
+
+                # This gets the item's key value for date and compares
+                # it to the users two dates and determines if the item's
+                # date value is within range.
+                for item in csv_contents:
+                    dict_date = item['date']
+                    dict_date = datetime.datetime.strptime(dict_date,
+                                                           '%m/%d/%Y')
+                    if date_1_first:
+                        if date_1 <= dict_date <= date_2:
+                            returned_contents.append(item)
+                    else:
+                        if date_2 <= dict_date <= date_1:
+                            returned_contents.append(item)
+
         elif minutes:
             # searching by the minutes section in the dictionary prevents
             # minutes from catching dates.
@@ -115,7 +140,7 @@ class CSVIntermediary():
                 csv_string = file.read().splitlines()
 
             # found_results is the index number associated with where a
-            # found result is in self.csv_contents
+            # found result is in csv_contents
             found_results = []
             line_counter = 0
             # New line characters are counted as a line so the sub_counter

@@ -54,7 +54,7 @@ def main():
 
         if menu_selector == 'd' or menu_selector == 'd)' \
                 or menu_selector == 'q' or menu_selector == 'quit':
-            print("Thank you for using the work log application!")
+            print("\nThank you for using the work log application!")
             main_loop = False
 
 

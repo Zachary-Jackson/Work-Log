@@ -17,8 +17,8 @@ class CSVIntermediaryTestCase(unittest.TestCase):
         This does not test to see if the correct values are added to the
         CSV file. """
         csv = CSVIntermediary()
-        # This is to check by user_date
 
+        # This is to check by user_date
         csv.add(user_date='04/21/1974', title='Testing with the ' +
                 'test_add', minutes=8, notes="None to report")
         csv.add(user_date='03/14/1764', title='secondary testing ' +
@@ -78,6 +78,7 @@ class EntryChangerTest(unittest.TestCase):
                        'date': '01/04/1995',
                        'minutes': '49', 'title': 'Salt mines'}]
         show_test.found_results = show_items
+        # Uncomment this next line to shortcut into show.
         # show_test.show()
 
 
