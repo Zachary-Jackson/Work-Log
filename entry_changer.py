@@ -206,9 +206,6 @@ class EntryChanger():
                 and menu_selector != 'all':
             self.show()
 
-    def edit(self):
-        pass
-
     def show_template(self, entry_num, max_entries, entry_date,
                       title, minutes, notes, menu_options=None):
         """ This is template that is created for and used in show(). """
@@ -322,21 +319,26 @@ class EntryChanger():
                 run_loop = False
                 self.search()
             elif menu_selector == 'e' or menu_selector == 'edit':
-                new_user_date, new_title, new_minutes, new_notes = \
-                 self.add(edit=True)
-                csv = CSVIntermediary()
-                csv.editor(entry_date, title, minutes, notes,
-                           new_user_date, new_title, new_minutes,
-                           new_notes, edit=True)
-                # this is a new dictionary to replace one in self.found_results
-                new_dict = {'date': '{}'.format(new_user_date),
-                            'title': '{}'.format(new_title),
-                            'minutes': '{}'.format(new_minutes),
-                            'notes': '{}'.format(new_notes)}
+                try:
+                    new_user_date, new_title, new_minutes, new_notes = \
+                     self.add(edit=True)
+                except TypeError:
+                    continue
+                else:
+                    csv = CSVIntermediary()
+                    csv.editor(entry_date, title, minutes, notes,
+                               new_user_date, new_title, new_minutes,
+                               new_notes, edit=True)
+                    # This is a new dictionary to replace one deleted
+                    # in self.found_results
+                    new_dict = {'date': '{}'.format(new_user_date),
+                                'title': '{}'.format(new_title),
+                                'minutes': '{}'.format(new_minutes),
+                                'notes': '{}'.format(new_notes)}
 
-                self.found_results[index_counter] = new_dict
-                self.show(index_counter=index_counter)
-                break
+                    self.found_results[index_counter] = new_dict
+                    self.show(index_counter=index_counter)
+                    break
 
             elif menu_selector == 'd' or menu_selector == 'delete':
                 delete = input('\n  Are you sure you want to delete this ' +
